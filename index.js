@@ -10,9 +10,9 @@ const cache = new Set();
 
 app.use(Express.json({type: "application/json"}));
 
-app.use((req, res, next) => {
+app.use((_, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept", "Authorization");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
   next();
 });
@@ -59,16 +59,16 @@ app.post("/donation-callback", (req, res) => {
 const io = new Server(server, {
   cors: {
     origin: "*",
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"]
   }
 });
 
 io.use((socket, next) => {
-  if (!socket.handshake.headers?.authorization?.length) {
+  if (!socket.handshake.auth?.token?.length) {
     return next(new Error("Invalid authentication header."));
   };
 
-  if (socket.handshake.headers.authorization !== process.env.WS_SECRET_KEY) {
+  if (socket.handshake.auth.token !== process.env.WS_SECRET_KEY) {
     return next(new Error("Authentication failed."));
   };
 
