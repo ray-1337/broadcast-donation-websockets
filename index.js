@@ -18,7 +18,7 @@ app.post("/donation-callback", (req, res) => {
   const receivedTime = Date.now();
 
   if (!req?.body?.id || !req.body?.donator_name || !req.body?.message || typeof req.body?.amount_raw !== "number") {
-    return res.status(400).end();
+    return res.sendStatus(400);
   };
 
   if (req.body?.type !== "donation") {
@@ -26,11 +26,11 @@ app.post("/donation-callback", (req, res) => {
   };
 
   if (!req?.query?.token || req.query.token !== process.env.WEBHOOK_ACCESS_KEY) {
-    return res.status(403).end();
+    return res.sendStatus(403);
   };
 
   if (cache.has(req.body.id)) {
-    return res.status(409).end();
+    return res.sendStatus(409);
   };
   
   cache.add(req.body.id);
@@ -46,7 +46,7 @@ app.post("/donation-callback", (req, res) => {
 
   console.log(`[NEW DONATION] ${message} - Rp. ${Number(amount || 0).toLocaleString()} - ${new Date(receivedTime).toLocaleString()}`);
 
-  return res.status(200).end();
+  return res.sendStatus(200);
 });
 
 const io = new Server(server);
