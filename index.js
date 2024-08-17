@@ -6,14 +6,8 @@ const PORT = 10000;
 
 const { Server } = require('socket.io');
 
-app
-.get("/donation-callback", (req, res) => {
-  console.log("GET", req.body);
-  res.status(200).end();
-})
-.post("/donation-callback", (req, res) => {
-  console.log("POST", req.body);
-  res.status(200).end();
+app.use(Express.json({type: "application/json"}));
+
 });
 
 const server = app.listen(PORT, () => {
