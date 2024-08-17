@@ -4,8 +4,14 @@ const PORT = 10000;
 
 const { Server } = require('socket.io');
 
-app.post("/donation-callback", (req, res) => {
-  console.log(req.body);
+app
+.get("/donation-callback", (req, res) => {
+  console.log("GET", req.body);
+  res.status(200).end();
+})
+.post("/donation-callback", (req, res) => {
+  console.log("POST", req.body);
+  res.status(200).end();
 });
 
 const server = app.listen(PORT, () => {
