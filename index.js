@@ -14,7 +14,17 @@ const server = app.listen(PORT, () => {
   console.log(`API listened on ${PORT}`);
 });
 
-const io = new Server(server);
+io.use((socket, next) => {
+  if (!socket.handshake.headers?.authorization?.length) {
+    return next(new Error("Invalid authentication header."));
+  };
+
+  if (socket.handshake.headers.authorization !== process.env.WS_SECRET_KEY) {
+    return next(new Error("Authentication failed."));
+  };
+
+  next();
+});
 
 io.on('connection', (socket) => {
   console.log('A user connected');
