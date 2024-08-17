@@ -10,6 +10,13 @@ const cache = new Set();
 
 app.use(Express.json({type: "application/json"}));
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+  next();
+});
+
 const server = app.listen(PORT, () => {
   console.log(`API listened on ${PORT}`);
 });
@@ -49,7 +56,12 @@ app.post("/donation-callback", (req, res) => {
   return res.sendStatus(200);
 });
 
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"]
+  }
+});
 
 io.use((socket, next) => {
   if (!socket.handshake.headers?.authorization?.length) {
