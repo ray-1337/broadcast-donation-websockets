@@ -59,7 +59,7 @@ app.post("/donation-callback", (req, res) => {
 const io = new Server(server, {
   cors: {
     origin: "*",
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"]
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
   }
 });
 
