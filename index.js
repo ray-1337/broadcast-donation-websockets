@@ -5,11 +5,14 @@ const app = Express();
 const PORT = 10000;
 
 const { Server } = require('socket.io');
-const io = new Server(server);
 
 const cache = new Set();
 
 app.use(Express.json({type: "application/json"}));
+
+const server = app.listen(PORT, () => {
+  console.log(`API listened on ${PORT}`);
+});
 
 app.post("/donation-callback", (req, res) => {
   const receivedTime = Date.now();
@@ -46,9 +49,7 @@ app.post("/donation-callback", (req, res) => {
   return res.status(200).end();
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`API listened on ${PORT}`);
-});
+const io = new Server(server);
 
 io.use((socket, next) => {
   if (!socket.handshake.headers?.authorization?.length) {
