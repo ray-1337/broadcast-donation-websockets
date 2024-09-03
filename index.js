@@ -14,6 +14,10 @@ app.use((_, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
+  if (!req?.query?.token?.length || typeof req.query.token !== "string" || req.query.token !== process.env.WEBHOOK_ACCESS_KEY) {
+    return res.sendStatus(403);
+  };
+
   next();
 });
 
@@ -30,10 +34,6 @@ app.post("/donation-callback", (req, res) => {
 
   if (req.body?.type !== "donation") {
     return res.status(403).send("invalid type");
-  };
-
-  if (!req?.query?.token || req.query.token !== process.env.WEBHOOK_ACCESS_KEY) {
-    return res.sendStatus(403);
   };
 
   if (cache.has(req.body.id)) {
