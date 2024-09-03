@@ -2,7 +2,7 @@ require("dotenv/config");
 
 const Express = require("express");
 const app = Express();
-const PORT = 10000;
+const PORT = typeof process.env?.PORT === "number" ? process.env.PORT : 10000;
 
 const { Server } = require('socket.io');
 
